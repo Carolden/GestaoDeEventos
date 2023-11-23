@@ -1,61 +1,60 @@
 import { Request, Response } from 'express';
-import { Usuario } from '../models/Usuarios';
 import { ILike } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { Cliente } from '../models/Cliente';
+import { Admin } from '../models/Admin';
 import * as puppeteer from "puppeteer";
 
-export class ClienteController {
+export class AdminController {
     async list (req: Request, res: Response): Promise<Response> {
         let nome = req.query.nome;
 
-        let cliente: Cliente[] = await Cliente.findBy({
+        let admin: Admin[] = await Admin.findBy({
           nome: nome ? ILike(`%${nome}%`) : undefined
         });
 
-        return res.status(200).json(cliente);
+        return res.status(200).json(admin);
       }
 
       async find (req: Request, res: Response): Promise<Response> {
-        let cliente: Cliente = res.locals.cliente;
+        let admin: Admin = res.locals.cliente;
 
-        return res.status(200).json(cliente);
+        return res.status(200).json(admin);
       }
 
       async create (req: Request, res: Response): Promise<Response> {
         let body = req.body;
 
 
-        let cliente: Cliente = await Cliente.create({
+        let admin: Admin = await Admin.create({
           nome: body.nome,
-          endereco: body.endereco,
           email: body.email,
-          telefone: body.telefone,
+          senha: body.senha,
+          role: body.role,
         }).save();
 
 
-        return res.status(200).json(cliente);
+        return res.status(200).json(admin);
       }
 
       async update (req: Request, res: Response): Promise<Response> {
         let body = req.body;
-        let cliente: Cliente = res.locals.cliente;
+        let admin: Admin = res.locals.admin;
 
 
-        cliente.nome = body.nome;
-        cliente.endereco = body.endereco;
-        cliente.email = body.email;
-        cliente.telefone = body.telefone;
-        await cliente.save();
+        admin.nome = body.nome;
+        admin.email = body.email;
+        admin.senha = body.senha;
+        admin.role = body.role;
+        await admin.save();
 
 
-        return res.status(200).json(cliente);
+        return res.status(200).json(admin);
       }
 
       async delete (req: Request, res: Response): Promise<Response> {
-        let cliente: Cliente = res.locals.cliente;
+        let admin: Admin = res.locals.admin;
 
-        cliente.remove();
+        admin.remove();
 
         return res.status(200).json();
       }
@@ -79,22 +78,22 @@ export class ClienteController {
           padding: 10px
         }
         </style>
-        <h1>Lista de clientes</h1>
+        <h1>Lista de Admins</h1>
       <table border="1">`;
 
-        let clientes: Cliente[] = await Cliente.findBy({
+        let admin: Admin[] = await Admin.findBy({
           nome: nome ? ILike(`${nome}`) : undefined,
         });
         html += "<tr><th>ID</th> <th>Nome</th> <th>Endereço</th> <th>Email</th> <th>Telefone</th></tr>";
-        clientes.forEach((element) => {
-          html += `<tr><td>${element.id}</td> <td>${element.nome}</td> <td>${element.endereco}</td> <td>${element.email}</td> <td>${element.telefone}</td></tr>\r`;
+        admin.forEach((element) => {
+          html += `<tr><td>${element.id}</td> <td>${element.nome}</td> <td>${element.email}</td> \r`;
         });
         html += "</table>";
         let today = new Date(Date.now());
         let data = today.toLocaleString(); // "30/1/2022"
         html += `<div>Gerado por: às ${data}</div>`;
 
-        let pdfBuffer = await ClienteController.pdf(html);
+        let pdfBuffer = await AdminController.pdf(html);
 
         res.append("Content-Type", "application/x-pdf");
         res.append("Content-Disposition", 'attachment; filename="ListaClientes.pdf"');
@@ -117,15 +116,15 @@ export class ClienteController {
       async exportCsv(req: Request, res: Response): Promise<Response> {
         let nome = req.query.nome;
 
-        let clientes: Cliente[] = await Cliente.findBy({
+        let admin: Admin[] = await Admin.findBy({
           nome: nome ? ILike(`${nome}`) : undefined,
         });
 
-        let header = '"ID";"Nome";"Endereco";"E-Mail";"Telefone"\n';
+        let header = '"ID";"Nome";"E-mail"\n';
         let csv = header;
 
-        clientes.forEach((element) => {
-          csv += `"${element.id}";"${element.nome}";"${element.endereco}";"${element.email}";"${element.telefone}"\r`;
+        admin.forEach((element) => {
+          csv += `"${element.id}";"${element.nome}";"${element.email}"\r`;
         });
 
         res.append("Content-Type", "text/csv");
