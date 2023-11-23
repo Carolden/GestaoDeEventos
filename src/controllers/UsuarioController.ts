@@ -133,5 +133,19 @@ export class UsuarioController {
         return res.status(200).send(csv);
       }
 
+      async login (req: Request, res: Response): Promise<Response> {
+        let body = req.body;
+        // let senha = md5(body.senha);
+        let usuarioLogin = await Usuario.findOneBy({email: body.email, senha: body.senha});
+
+        if (usuarioLogin) {
+            return res.status(200).json();
+        }
+
+        return res.status(422).json({
+            mensagem: "Usuário ou senha incorretos"
+        });
+    }
+
 
 }
