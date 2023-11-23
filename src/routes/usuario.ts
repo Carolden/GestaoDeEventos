@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import * as yup from 'yup';
-import { Admin } from './../models/Admin'
+import { Usuario } from '../models/Usuario'
 import { Not } from 'typeorm';
 import { AdminController } from '../controllers/AdminController';
+import { UsuarioController } from '../controllers/UsuarioController';
 
 
 // async function validarPayload (req: Request, res: Response, next: NextFunction): Promise<Response|void> {
@@ -53,21 +54,20 @@ import { AdminController } from '../controllers/AdminController';
 
 let router: Router = Router();
 
-let adminController: AdminController = new AdminController();
+let usuarioController: UsuarioController = new UsuarioController();
 
+router.post('/usuario', usuarioController.create);
 
-router.post('/admin', adminController.create);
+router.get('/usuario/:id', usuarioController.find);
 
-router.get('/admin/:id', adminController.find);
+router.get('/usuario', usuarioController.list);
 
-router.get('/admin', adminController.list);
+router.put('/usuario/:id', usuarioController.update);
 
-router.put('/admin/:id', adminController.update);
+router.delete('/usuario/:id', usuarioController.delete);
 
-router.delete('/admin/:id', adminController.delete);
+router.get("/usuariopdf", usuarioController.downloadPdf);
 
-router.get("/adminpdf", adminController.downloadPdf);
-
-router.get("/admincsv", adminController.exportCsv);
+router.get("/usuariocsv", usuarioController.exportCsv);
 
 export default router;
