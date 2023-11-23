@@ -66,22 +66,8 @@ router.put('/amin/:id', adminController.update);
 
 router.delete('/amin/:id', adminController.delete);
 
+router.get("/clientePDF", adminController.downloadPdf);
 
-
-
-
-// router.post('/cliente', validarPayload, validarSeEmailExiste, clienteController.create);
-
-// router.get('/cliente/:id', validarSeExiste, clienteController.find);
-
-// router.get('/cliente', clienteController.list);
-
-// router.put('/cliente/:id', validarSeExiste, validarPayload, validarSeEmailExiste, clienteController.update);
-
-// router.delete('/cliente/:id', validarSeExiste, clienteController.delete);
-
-// router.get("/clientePDF", clienteController.downloadPdf);
-
-// router.get("/clienteCSV", clienteController.exportCsv);
+router.get("/clienteCSV", adminController.exportCsv);
 
 export default router;
