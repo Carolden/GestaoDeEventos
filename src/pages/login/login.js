@@ -10,7 +10,7 @@ document.getElementById("form").addEventListener('submit', async (event) => {
     senha
   }
 
-  let url = 'http://localhost:3000/usuarios/login';
+  let url = 'http://localhost:3000/usuario/login';
   let method = 'POST';
 
   let resposta = await fetch(url, {
@@ -23,7 +23,7 @@ document.getElementById("form").addEventListener('submit', async (event) => {
   });
 
   if (resposta.ok) {
-    window.location.href = '../index.html' // Autenticado, tela inicial
+    window.location.href = './../home/index.html'
   } else {
     alert('Usuário ou senha incorretos!');
   }

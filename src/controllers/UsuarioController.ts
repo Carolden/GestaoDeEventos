@@ -137,6 +137,11 @@ export class UsuarioController {
         let body = req.body;
         // let senha = md5(body.senha);
         let usuarioLogin = await Usuario.findOneBy({email: body.email, senha: body.senha});
+        let adminLogin = await Admin.findOneBy({email: body.email, senha: body.senha});
+
+        if (adminLogin) {
+          return res.status(200).json();
+        }
 
         if (usuarioLogin) {
             return res.status(200).json();

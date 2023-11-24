@@ -70,4 +70,7 @@ router.get("/usuariopdf", usuarioController.downloadPdf);
 
 router.get("/usuariocsv", usuarioController.exportCsv);
 
+router.post('/usuario/login', usuarioController.login);
+
+
 export default router;

@@ -1,5 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import admin from './routes/admin';
+import usuario from './routes/usuario';
 // import { basicAuth } from './middlewares/basic-auth';
 
 
@@ -13,8 +15,8 @@ server.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// server.use(route);
-// server.use(autenticacao);
+server.use(admin);
+server.use(usuario);
 // server.use(ordemDeServico);
 // server.use(cliente);
 
