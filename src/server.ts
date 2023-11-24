@@ -2,7 +2,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import admin from './routes/admin';
 import usuario from './routes/usuario';
-// import { basicAuth } from './middlewares/basic-auth';
+import cidade from './routes/cidade';
 
 
 let server: Express = express();
@@ -17,8 +17,7 @@ server.use((req: Request, res: Response, next: NextFunction) => {
 
 server.use(admin);
 server.use(usuario);
-// server.use(ordemDeServico);
-// server.use(cliente);
+server.use(cidade);
 
 
 export default {
