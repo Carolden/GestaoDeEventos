@@ -1,32 +1,57 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Cidade } from "./Cidade";
+import { Admin } from "./Admin";
 
-@Entity('clientes')
+@Entity("clientes")
 export class Evento extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    public id: number
+  @PrimaryGeneratedColumn()
+  public id: number;
 
-    @Column()
-    public descricao: string;
+  @Column()
+  public descricao: string;
 
-    @Column()
-    public dataInicio: string;
+  @Column({
+    type: "date",
+  })
+  public dataInicio: string;
 
-    @Column()
-    public dataFim: string;
+  @Column({
+    type: "date",
+  })
+  public dataFim: string;
 
-    @Column()
-    public horaInicio: string;
+  @Column({
+    type: "time",
+  })
+  public horaInicio: string;
 
-    @Column()
-    public horaFim: string;
+  @Column({
+    type: "time",
+  })
+  public horaFim: string;
 
-    @Column()
-    public local: string;
+  @Column()
+  public local: string;
 
-    @Column()
-    public id_cidade: number;
+  @Column()
+  public id_cidade: number;
 
-    @Column()
-    public id_admin: number;
+  @Column()
+  public id_admin: number;
 
+  @ManyToOne(() => Cidade, (cidade) => cidade.evento, { eager: true })
+  @JoinColumn({ name: "id_cidade" })
+  public cidade: Cidade;
+
+  @ManyToOne(() => Admin, (admin) => admin.evento, { eager: true })
+  @JoinColumn({ name: "id_admin" })
+  public admin: Admin;
 }

@@ -1,6 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Evento } from "./Evento";
 
-@Entity('admin')
+@Entity("admin")
 export class Admin extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
@@ -16,4 +23,7 @@ export class Admin extends BaseEntity {
 
   @Column()
   public role: string;
+
+  @OneToMany(() => Evento, (evento) => evento.admin)
+  public evento: Promise<Evento[]>;
 }

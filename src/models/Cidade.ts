@@ -1,6 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from "typeorm";
+import { Evento } from "./Evento";
 
-@Entity('cidades')
+@Entity("cidades")
 export class Cidade extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
@@ -8,4 +15,6 @@ export class Cidade extends BaseEntity {
   @Column()
   public nome: string;
 
+  @OneToMany(() => Evento, (evento) => evento.cidade)
+  public evento: Promise<Evento[]>;
 }
