@@ -1,71 +1,68 @@
-import { Evento } from '../models/Evento';
-import { Cidade } from '../models/Cidade';
-import { ILike } from 'typeorm';
-import { Request, Response } from 'express';
-import puppeteer from 'puppeteer';
+import { Evento } from "../models/Evento";
+import { Cidade } from "../models/Cidade";
+import { ILike } from "typeorm";
+import { Request, Response } from "express";
+import puppeteer from "puppeteer";
 
 export class EventoController {
+  async list(req: Request, res: Response): Promise<Response> {
+    let event: Evento[] = await Evento.find();
 
-    async list(req: Request, res: Response): Promise<Response> {
-        let event: Evento[] = await Evento.find();
+    return res.status(200).json(event);
+  }
 
-        return res.status(200).json(event);
-    }
+  async create(req: Request, res: Response): Promise<Response> {
+    let body = req.body;
 
+    let evento: Evento = await Evento.create({
+      descricao: body.descricao,
+      dataInicio: body.dataInicio,
+      dataFim: body.dataFim,
+      horaInicio: body.horaInicio,
+      horaFim: body.horaFim,
+      local: body.local,
+      id_cidade: body.id_cidade,
+      id_admin: body.id_admin,
+    }).save();
 
-    async create(req: Request, res: Response): Promise<Response> {
-        let body = req.body;
+    return res.status(200).json(evento);
+  }
+  async delete(req: Request, res: Response): Promise<Response> {
+    let evento: Evento = res.locals.evento;
 
-        let evento: Evento = await Evento.create({
-            descricao: body.descricao,
-            dataInicio: body.dataInicio,
-            dataFim: body.dataFim,
-            horaInicio: body.horaInicio,
-            horaFim: body.horaFim,
-            local: body.local,
-            id_cidade: body.id_cidade,
-            id_admin: body.id_admin
-        }).save();
+    evento.remove();
 
-        return res.status(200).json(evento);
-    }
-    async delete(req: Request, res: Response): Promise<Response> {
-        let evento: Evento = res.locals.evento;
+    return res.status(200).json();
+  }
 
-        evento.remove();
+  async find(req: Request, res: Response): Promise<Response> {
+    let evento: Evento = res.locals.evento;
 
-        return res.status(200).json();
-    }
+    return res.status(200).json(evento);
+  }
 
-    async find(req: Request, res: Response): Promise<Response> {
-        let evento: Evento = res.locals.evento;
+  async update(req: Request, res: Response): Promise<Response> {
+    let body = req.body;
+    let evento: Evento = res.locals.evento;
 
-        return res.status(200).json(evento);
-    }
+    (evento.descricao = body.descricao),
+      (evento.dataInicio = body.dataInicio),
+      (evento.dataFim = body.dataFim),
+      (evento.horaInicio = body.horaInicio),
+      (evento.horaFim = body.horaFim),
+      (evento.local = body.local),
+      (evento.id_cidade = body.id_cidade),
+      (evento.id_admin = body.id_admin),
+      await evento.save();
 
+    return res.status(200).json(evento);
+  }
 
-    async update(req: Request, res: Response): Promise<Response> {
-        let body = req.body;
-        let evento: Evento = res.locals.evento;
+  async pdf(req: Request, res: Response) {
+    let dados = await Evento.find();
+    console.log(dados);
 
-            evento.descricao = body.descricao,
-            evento.dataInicio = body.dataInicio,
-            evento.dataFim = body.dataFim,
-            evento.horaInicio = body.horaInicio,
-            evento.horaFim = body.horaFim,
-            evento.local = body.local,
-            evento.id_cidade = body.id_cidade,
-            evento.id_admin = body.id_admin,
-            await evento.save();
-
-        return res.status(200).json(evento);
-    }
-
-    async pdf(req: Request, res: Response) {
-        let dados = await Evento.find();
-        console.log(dados);
-
-        let html: string = `<style>
+    let html: string = `<style>
     *{
       font-family: "Arial";
     }
@@ -85,7 +82,7 @@ export class EventoController {
     <h1>Lista de Eventos</h1>
   <table border="1">`;
 
-        html += `
+    html += `
         <tr>
         <th>ID</th>
         <th>Descrição</th>
@@ -97,8 +94,8 @@ export class EventoController {
         <th>Cidade</th>
         <th>Criado por</th>
         </tr>`;
-        dados.forEach(function (dado) {
-            html += `<tr>
+    dados.forEach(function (dado) {
+      html += `<tr>
             <td>${dado.id}</td>
             <td>${dado.descricao}</td>
             <td>${dado.dataInicio}</td>
@@ -109,45 +106,42 @@ export class EventoController {
             <td>${dado.cidade.nome}</td>
             <td>${dado.admin.nome}</td>
             </tr>`;
-        })
-        html += `</table>`
+    });
+    html += `</table>`;
 
-        console.log(html);
+    console.log(html);
 
-        let pdf = await EventoController.criarPdf(html);
+    let pdf = await EventoController.criarPdf(html);
 
-        res.append('Content-Type', 'application/x-pdf');
-        res.append('Content-Disposition', 'attachment; filename="eventos.pdf"');
-        res.send(pdf);
+    res.append("Content-Type", "application/x-pdf");
+    res.append("Content-Disposition", 'attachment; filename="eventos.pdf"');
+    res.send(pdf);
+  }
 
-    }
+  static async criarPdf(html: string) {
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1366, height: 768 });
+    await page.setContent(html);
+    const pdfBuffer = await page.pdf();
+    await page.close();
+    await browser.close();
+    return pdfBuffer;
+  }
 
-    static async criarPdf(html: string) {
+  async listCsv(req: Request, res: Response): Promise<Response> {
+    let evento: Evento[] = await Evento.find();
 
-        const browser = await puppeteer.launch({ headless: "new" });
-        const page = await browser.newPage();
-        await page.setViewport({ width: 1366, height: 768 });
-        await page.setContent(html);
-        const pdfBuffer = await page.pdf();
-        await page.close();
-        await browser.close();
-        return pdfBuffer;
+    let header =
+      '"ID";"Data de Início";"Data do Fim";"Horário de Início";"Horário do Fim";"Endereço";"Cidade"\n';
+    let csv = header;
 
-    }
+    evento.forEach((element) => {
+      csv += `"${element.id}";"${element.descricao}";"${element.dataInicio}";"${element.dataFim}";"${element.horaInicio}";"${element.horaFim}";"${element.cidade.nome}";"${element.admin.nome}"\n`;
+    });
 
-    async listCsv(req: Request, res: Response): Promise<Response> {
-
-        let evento: Evento[] = await Evento.find()
-
-        let header = '"ID";"Nome";"CPF";"Email";"Telefone";"Endereço";"Cidade"\n';
-        let csv = header;
-
-        evento.forEach((element) => {
-            csv += `"${element.id}";"${element.descricao}";"${element.dataInicio}";"${element.dataFim}";"${element.horaInicio}";"${element.horaFim}";"${element.cidade.nome}";"${element.admin.nome}"\n`;
-        });
-
-        res.append("Content-Type", "text/csv");
-        res.attachment("usuarios.csv");
-        return res.status(200).send(csv);
-    }
+    res.append("Content-Type", "text/csv");
+    res.attachment("usuarios.csv");
+    return res.status(200).send(csv);
+  }
 }

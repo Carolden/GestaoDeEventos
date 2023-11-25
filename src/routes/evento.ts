@@ -11,20 +11,16 @@ async function validarPayload(
 ): Promise<Response | void> {
   let schema = yup.object({
     descricao: yup.string().min(3).max(255).required(),
-    dataInicio: yup.date().transform(function (value, originalValue) {
-      if (this.isType(value)) {
-        return value;
-      }
-      const result = parse(originalValue, "dd.MM.yyyy", new Date());
-      return result;
-    }),
-    dataFim: yup.date().transform(function (value, originalValue) {
-      if (this.isType(value)) {
-        return value;
-      }
-      const result = parse(originalValue, "dd.MM.yyyy", new Date());
-      return result;
-    }),
+    dataInicio: yup
+      .date()
+      .transform((value, originalValue) =>
+        parse(originalValue, "dd/MM/yyyy", new Date())
+      ),
+    dataFim: yup
+      .date()
+      .transform((value, originalValue) =>
+        parse(originalValue, "dd/MM/yyyy", new Date())
+      ),
     horaInicio: yup.string().min(1).max(5).required(),
     horaFim: yup.string().min(1).max(5).required(),
     local: yup.string().min(3).max(45).required(),
@@ -71,20 +67,20 @@ let router: Router = Router();
 
 let eventoController: EventoController = new EventoController();
 
-router.get("/ecento", eventoController.list);
+router.get("/evento", eventoController.list);
 
-router.get("/ecento/:id", validarSeExiste, eventoController.find);
+router.get("/evento/:id", validarSeExiste, eventoController.find);
 
-router.post("/ecento", validarPayload, eventoController.create);
+router.post("/evento", validarPayload, eventoController.create);
 
 router.put(
-  "/ecento/:id",
+  "/evento/:id",
   validarPayload,
   validarSeExiste,
   eventoController.update
 );
 
-router.delete("/ecento/:id", validarSeExiste, eventoController.delete);
+router.delete("/evento/:id", validarSeExiste, eventoController.delete);
 
 router.get("/eventoPdf", eventoController.pdf);
 
