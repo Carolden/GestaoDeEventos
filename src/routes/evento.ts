@@ -11,19 +11,11 @@ async function validarPayload(
 ): Promise<Response | void> {
   let schema = yup.object({
     descricao: yup.string().min(3).max(255).required(),
-    dataInicio: yup
-      .date()
-      .transform((value, originalValue) =>
-        parse(originalValue, "dd/MM/yyyy", new Date())
-      ),
-    dataFim: yup
-      .date()
-      .transform((value, originalValue) =>
-        parse(originalValue, "dd/MM/yyyy", new Date())
-      ),
-    horaInicio: yup.string().min(1).max(5).required(),
-    horaFim: yup.string().min(1).max(5).required(),
-    local: yup.string().min(3).max(45).required(),
+    dataInicio: yup.date(),
+    dataFim: yup.date(),
+    horaInicio: yup.string().min(1).max(8).required(),
+    horaFim: yup.string().min(1).max(8).required(),
+    local: yup.string().min(3).max(255).required(),
     id_cidade: yup.number().required(),
     id_admin: yup.number().required(),
   });

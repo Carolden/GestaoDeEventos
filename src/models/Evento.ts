@@ -10,7 +10,7 @@ import {
 import { Cidade } from "./Cidade";
 import { Admin } from "./Admin";
 
-@Entity("clientes")
+@Entity("eventos")
 export class Evento extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;
