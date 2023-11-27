@@ -10,14 +10,14 @@ async function buscarUsuarios () {
     let tdEmail = document.createElement('td');
     let tdCPF = document.createElement('td');
     let tdTelefone = document.createElement('td');
-    let tdEndereco = document.createElement('td');
+    // let tdEndereco = document.createElement('td');
     let tdAcoes = document.createElement('td');
 
     tdNome.innerText = usuario.nome;
     tdEmail.innerText = usuario.email;
     tdCPF.innerText = usuario.cpf;
     tdTelefone.innerText = usuario.telefone;
-    tdEndereco.innerText = tdEndereco.endereco;
+    // tdEndereco.innerText = tdEndereco.endereco;
 
     tdAcoes.innerHTML = `
       <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${usuario.id}">Editar</a>
@@ -29,7 +29,7 @@ async function buscarUsuarios () {
     tr.appendChild(tdEmail);
     tr.appendChild(tdCPF);
     tr.appendChild(tdTelefone);
-    tr.appendChild(tdEndereco);
+    // tr.appendChild(tdEndereco);
     tr.appendChild(tdAcoes);
 
     corpoTabela.appendChild(tr);
