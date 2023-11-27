@@ -9,7 +9,6 @@ let inputCPF = document.getElementById('cpf');
 let inputSenha = document.getElementById('senha');
 let form = document.getElementById('formulario');
 let cidade = document.getElementById('cidade');
-// let citySelect = document.getElementById('city');
 
 async function listaCidades() {
   let resposta = await fetch('http://localhost:3000/cidade');

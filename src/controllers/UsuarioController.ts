@@ -74,12 +74,23 @@ export class UsuarioController {
         return res.status(200).json(usuario);
       }
 
-      async delete (req: Request, res: Response): Promise<Response> {
-        let usuario: Admin = res.locals.usuario;
-
-        usuario.remove();
-
-        return res.status(200).json();
+      async delete(req: Request, res: Response): Promise<Response> {
+        try {
+          const usuarioId = Number(req.params.id);
+    
+          const usuario = await Usuario.findOneBy({ id: usuarioId });
+    
+          if (!usuario) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+          }
+    
+          await usuario.remove();
+    
+          return res.status(204).send();
+        } catch (error) {
+          console.error('Erro ao excluir usuário', error);
+          return res.status(500).json({ message: 'Erro ao excluir usuário' });
+        }
       }
 
       async downloadPdf(req: Request, res: Response) {
