@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Evento } from "./Evento";
+import { Usuario } from "./Usuario";
 
 @Entity("cidades")
 export class Cidade extends BaseEntity {
@@ -17,4 +18,7 @@ export class Cidade extends BaseEntity {
 
   @OneToMany(() => Evento, (evento) => evento.cidade)
   public evento: Promise<Evento[]>;
+
+  @OneToMany(() => Usuario, (usuario) => usuario.cidade)
+  public usuarios: Promise<Usuario[]>;
 }

@@ -8,6 +8,43 @@ let inputEndereco = document.getElementById('endereco');
 let inputCPF = document.getElementById('cpf');
 let inputSenha = document.getElementById('senha');
 let form = document.getElementById('formulario');
+let cidade = document.getElementById('cidade');
+// let citySelect = document.getElementById('city');
+
+async function listaCidades() {
+  let resposta = await fetch('http://localhost:3000/cidade');
+  
+  if (resposta.ok) {
+    let cidadesJson = await resposta.json();
+    
+    let nomesCidades = cidadesJson.map(cidade => cidade.nome);
+
+    console.log(nomesCidades);
+
+    popularDropdown(nomesCidades);
+  } else {
+    console.error('Erro ao obter a lista de cidades');
+  }
+}
+
+function popularDropdown(cidades) {
+  const dropdown = $('#cidade');
+
+  dropdown.empty();
+
+  dropdown.append('<option selected>Selecione a cidade</option>');
+
+  cidades.forEach((cidade) => {
+    dropdown.append(`<option value="${cidade}">${cidade}</option>`);
+  });
+}
+
+$(document).ready(() => {
+  listaCidades();
+});
+
+//FALTA VALIDAÇÃO
+
 
 async function buscarDados () {
   let resposta = await fetch('http://localhost:3000/usuario/' + id);
@@ -30,6 +67,10 @@ async function buscarDados () {
 if (id) {
   buscarDados();
 }
+
+citySelect.addEventListener('change', () => {
+  setCities(stateSelect.value);
+});
 
 form.addEventListener('submit', async (event) => {
   event.stopPropagation();

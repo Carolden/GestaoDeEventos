@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Cidade } from "./Cidade";
 
 @Entity('usuario')
 export class Usuario extends BaseEntity {
@@ -25,4 +26,7 @@ export class Usuario extends BaseEntity {
 
   @Column()
   public endereco: string;
+
+  @ManyToOne(() => Cidade, (cidade) => cidade.usuarios)
+  public cidade: Cidade;
 }
