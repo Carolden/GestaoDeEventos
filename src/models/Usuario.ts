@@ -15,7 +15,7 @@ export class Usuario extends BaseEntity {
   @Column({ select: false })
   public senha: string;
 
-  @Column()
+  @Column({ nullable: true })
   public role: string;
 
   @Column()

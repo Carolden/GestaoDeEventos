@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { Admin } from '../models/Admin';
 import * as puppeteer from "puppeteer";
 import { Usuario } from '../models/Usuario';
+import { Cidade } from '../models/Cidade';
 
 export class UsuarioController {
     async list (req: Request, res: Response): Promise<Response> {
@@ -22,19 +23,40 @@ export class UsuarioController {
         return res.status(200).json(usuario);
       }
 
-      async create (req: Request, res: Response): Promise<Response> {
-        let body = req.body;
+      async create(req: Request, res: Response): Promise<Response> {
+        try {
+          const body = req.body;
+          const cidadeNome = body.cidadeId; // Assumindo que você está enviando o nome da cidade como cidadeId
 
-
-        let usuario: Usuario = await Usuario.create({
-          nome: body.nome,
-          email: body.email,
-          senha: body.senha,
-          role: body.role,
-        }).save();
-
-
-        return res.status(200).json(usuario);
+          if (typeof cidadeNome !== 'string') {
+            return res.status(400).json({ error: 'Nome da cidade inválido' });
+          }
+          
+          const cidade = await Cidade.findOne({ where: { nome: cidadeNome } });       
+             
+          if (!cidade) {
+            return res.status(404).json({ error: 'Cidade não encontrada' });
+          }
+    
+          const usuario = Usuario.create({
+            nome: body.nome,
+            email: body.email,
+            senha: body.senha,
+            role: body.role,
+            cpf: body.cpf,
+            telefone: body.telefone,
+            endereco: body.endereco,
+          });
+    
+          usuario.cidade = cidade; // Atribuir a instância da cidade ao usuário
+    
+          await usuario.save();
+    
+          return res.status(201).json(usuario);
+        } catch (error) {
+          console.error('Erro ao criar usuário:', error);
+          return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
       }
 
       async update (req: Request, res: Response): Promise<Response> {

@@ -28,22 +28,25 @@ async function listaCidades() {
 }
 
 function popularDropdown(cidades) {
-  const dropdown = $('#cidade');
+  let cidadeSelect = document.getElementById('cidade');
 
-  dropdown.empty();
+  cidadeSelect.innerHTML = '';
 
-  dropdown.append('<option selected>Selecione a cidade</option>');
+  cidadeSelect.innerHTML = '<option selected>Selecione a cidade</option>';
 
   cidades.forEach((cidade) => {
-    dropdown.append(`<option value="${cidade}">${cidade}</option>`);
+    let option = document.createElement('option');
+    option.value = cidade;
+    option.textContent = cidade;
+    cidadeSelect.appendChild(option);
   });
 }
 
-$(document).ready(() => {
+
+document.addEventListener('DOMContentLoaded', () => {
   listaCidades();
 });
 
-//FALTA VALIDAÇÃO
 
 
 async function buscarDados () {
@@ -68,9 +71,6 @@ if (id) {
   buscarDados();
 }
 
-citySelect.addEventListener('change', () => {
-  setCities(stateSelect.value);
-});
 
 form.addEventListener('submit', async (event) => {
   event.stopPropagation();
@@ -78,11 +78,12 @@ form.addEventListener('submit', async (event) => {
 
   let payload = {
     nome: inputNome.value,
-    telefone: inputTelefone.value,
     email: inputEmail.value,
-    endereco: inputEndereco.value,
+    senha: inputSenha.value,
     cpf: inputCPF.value,
-    senha: inputSenha.value
+    telefone: inputTelefone.value,
+    endereco: inputEndereco.value,
+    cidadeId: cidade.value
   }
 
   let url = 'http://localhost:3000/usuario';
