@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import * as yup from 'yup';
-import { Admin } from './../models/Admin'
-import { Not } from 'typeorm';
-import { AdminController } from '../controllers/AdminController';
-
+import { NextFunction, Request, Response, Router } from "express";
+import * as yup from "yup";
+import { Admin } from "./../models/Admin";
+import { Not } from "typeorm";
+import { AdminController } from "../controllers/AdminController";
 
 // async function validarPayload (req: Request, res: Response, next: NextFunction): Promise<Response|void> {
 //     let schema = yup.object({
@@ -39,32 +38,35 @@ import { AdminController } from '../controllers/AdminController';
 //     return next();
 //   }
 
-// async function validarSeExiste (req: Request, res: Response, next: NextFunction): Promise<Response|void> {
-//     let id = Number(req.params.id);
-//     let cliente: Cliente|null = await Cliente.findOneBy({ id });
-//     if (! cliente) {
-//       return res.status(422).json({ error: 'Usuario não encontrado!' });
-//     }
+async function validarSeExiste(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> {
+  let id = Number(req.params.id);
+  let admin: Admin | null = await Admin.findOneBy({ id });
+  if (!admin) {
+    return res.status(422).json({ error: "Admin não encontrado!" });
+  }
 
-//     res.locals.cliente = cliente;
+  res.locals.cliente = admin;
 
-//     return next();
-//   }
+  return next();
+}
 
 let router: Router = Router();
 
 let adminController: AdminController = new AdminController();
 
+router.post("/admin", adminController.create);
 
-router.post('/admin', adminController.create);
+router.get("/admin/:id", validarSeExiste, adminController.find);
 
-router.get('/admin/:id', adminController.find);
+router.get("/admin", adminController.list);
 
-router.get('/admin', adminController.list);
+router.put("/admin/:id", adminController.update);
 
-router.put('/admin/:id', adminController.update);
-
-router.delete('/admin/:id', adminController.delete);
+router.delete("/admin/:id", adminController.delete);
 
 router.get("/adminpdf", adminController.downloadPdf);
 
