@@ -53,6 +53,11 @@ async function definirCidades() {
 
     cidadeSelect.appendChild(option);
   }
+  if (id) {
+    let resposta = await fetch("http://localhost:3000/evento/" + id);
+    let evento = await resposta.json();
+    cidadeSelect.value = evento.cidade.id;
+  }
 }
 
 async function definirAdmins() {
@@ -70,6 +75,11 @@ async function definirAdmins() {
 
     adminSelect.appendChild(option);
   }
+  if (id) {
+    let resposta = await fetch("http://localhost:3000/evento/" + id);
+    let evento = await resposta.json();
+    adminSelect.value = evento.admin.id;
+  }
 }
 
 definirCidades();
@@ -86,8 +96,6 @@ async function buscarDados() {
     inputHoraInicio.value = evento.horaInicio;
     inputHoraFim.value = evento.horaFim;
     inputLocal.value = evento.local;
-    cidadeSelect.value = evento.cidade.id;
-    adminSelect.value = evento.admin.id;
   } else if (resposta.status === 422) {
     let e = await resposta.json();
     alert(e.error);

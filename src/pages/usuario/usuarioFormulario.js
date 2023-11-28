@@ -23,6 +23,11 @@ async function listaCidades() {
   } else {
     console.error("Erro ao obter a lista de cidades");
   }
+  if (id) {
+    let resposta = await fetch("http://localhost:3000/usuario/" + id);
+    let usuario = await resposta.json();
+    cidadeSelect.value = usuario.cidade.nome;
+  }
 }
 
 function popularDropdown(cidades) {
@@ -52,7 +57,6 @@ async function buscarDados() {
     inputEmail.value = usuario.email;
     inputEndereco.value = usuario.endereco;
     inputCPF.value = usuario.cpf;
-    cidadeSelect.value = usuario.cidade.nome;
   } else if (resposta.status === 422) {
     let e = await resposta.json();
     alert(e.error);
