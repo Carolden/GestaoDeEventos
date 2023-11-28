@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Cidade } from "./Cidade";
 import { Admin } from "./Admin";
+import { Inscricao } from "./Inscricao";
 
 @Entity("eventos")
 export class Evento extends BaseEntity {
@@ -57,4 +58,7 @@ export class Evento extends BaseEntity {
   @ManyToOne(() => Admin, (admin) => admin.evento, { eager: true })
   @JoinColumn({ name: "id_admin" })
   public admin: Admin;
+
+  @ManyToOne(() => Inscricao, (inscricao) => inscricao.evento)
+  public inscricao: Promise<Inscricao[]>;
 }

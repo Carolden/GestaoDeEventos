@@ -4,6 +4,7 @@ import admin from "./routes/admin";
 import usuario from "./routes/usuario";
 import cidade from "./routes/cidade";
 import evento from "./routes/evento";
+import inscricao from "./routes/inscricao";
 
 let server: Express = express();
 
@@ -19,6 +20,7 @@ server.use(admin);
 server.use(usuario);
 server.use(cidade);
 server.use(evento);
+server.use(inscricao);
 
 export default {
   start() {
