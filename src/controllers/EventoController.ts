@@ -15,6 +15,7 @@ export class EventoController {
     let body = req.body;
 
     let evento: Evento = await Evento.create({
+      titulo: body.titulo,
       descricao: body.descricao,
       dataInicio: body.dataInicio,
       dataFim: body.dataFim,
@@ -45,7 +46,8 @@ export class EventoController {
     let body = req.body;
     let evento: Evento = res.locals.evento;
 
-    (evento.descricao = body.descricao),
+    (evento.titulo = body.titulo),
+      (evento.descricao = body.descricao),
       (evento.dataInicio = body.dataInicio),
       (evento.dataFim = body.dataFim),
       (evento.horaInicio = body.horaInicio),
@@ -85,6 +87,7 @@ export class EventoController {
     html += `
         <tr>
         <th>ID</th>
+        <th>Título</th>
         <th>Descrição</th>
         <th>Data de Inicio</th>
         <th>Data de Fim</th>
@@ -97,6 +100,7 @@ export class EventoController {
     dados.forEach(function (dado) {
       html += `<tr>
             <td>${dado.id}</td>
+            <td>${dado.titulo}</td>
             <td>${dado.descricao}</td>
             <td>${dado.dataInicio}</td>
             <td>${dado.dataFim}</td>
@@ -133,11 +137,11 @@ export class EventoController {
     let evento: Evento[] = await Evento.find();
 
     let header =
-      '"ID";"Data de Início";"Data do Fim";"Horário de Início";"Horário do Fim";"Endereço";"Cidade"\n';
+      '"ID";"Data de Início";"Data do Fim";"Horário de Início";"Horário do Fim";"Endereço";"Cidade";"Admin"\n';
     let csv = header;
 
     evento.forEach((element) => {
-      csv += `"${element.id}";"${element.descricao}";"${element.dataInicio}";"${element.dataFim}";"${element.horaInicio}";"${element.horaFim}";"${element.cidade.nome}";"${element.admin.nome}"\n`;
+      csv += `"${element.id}";"${element.titulo}";"${element.descricao}";"${element.dataInicio}";"${element.dataFim}";"${element.horaInicio}";"${element.horaFim}";"${element.cidade.nome}";"${element.admin.nome}"\n`;
     });
 
     res.append("Content-Type", "text/csv");

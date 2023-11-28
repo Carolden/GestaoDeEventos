@@ -6,6 +6,7 @@ async function buscarEventos() {
 
   for (let evento of eventos) {
     let tr = document.createElement("tr");
+    let tdTitulo = document.createElement("td");
     let tdDescricao = document.createElement("td");
     let tdDataInicio = document.createElement("td");
     let tdDataFim = document.createElement("td");
@@ -15,6 +16,7 @@ async function buscarEventos() {
     let tdCidade = document.createElement("td");
     let tdAcoes = document.createElement("td");
 
+    tdTitulo.innerText = evento.titulo;
     tdDescricao.innerText = evento.descricao;
     tdDataInicio.innerText = evento.dataInicio;
     tdDataFim.innerText = evento.dataFim;
@@ -29,6 +31,7 @@ async function buscarEventos() {
     `;
 
     tdAcoes.classList = "text-center";
+    tr.appendChild(tdTitulo);
     tr.appendChild(tdDescricao);
     tr.appendChild(tdDataInicio);
     tr.appendChild(tdDataFim);

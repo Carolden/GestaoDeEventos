@@ -16,6 +16,9 @@ export class Evento extends BaseEntity {
   public id: number;
 
   @Column()
+  public titulo: string;
+
+  @Column()
   public descricao: string;
 
   @Column({

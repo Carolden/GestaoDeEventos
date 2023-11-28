@@ -1,6 +1,7 @@
 let cidadeSelect = document.getElementById("cidade");
 let adminSelect = document.getElementById("admin");
 
+let inputTitulo = document.getElementById("titulo");
 let inputDescricao = document.getElementById("descricao");
 let inputDataInicio = document.getElementById("dataInicio");
 let inputDataFim = document.getElementById("dataFim");
@@ -78,6 +79,7 @@ async function buscarDados() {
   let resposta = await fetch("http://localhost:3000/evento/" + id);
   if (resposta.ok) {
     let evento = await resposta.json();
+    inputTitulo.value = evento.titulo;
     inputDescricao.value = evento.descricao;
     inputDataInicio.value = evento.dataInicio;
     inputDataFim.value = evento.dataFim;
@@ -102,6 +104,7 @@ form.addEventListener("submit", async (e) => {
   e.stopPropagation();
   e.preventDefault();
 
+  let titulo = inputTitulo.value;
   let descricao = inputDescricao.value;
   let dataInicio = inputDataInicio.value;
   let dataFim = inputDataFim.value;
@@ -112,6 +115,7 @@ form.addEventListener("submit", async (e) => {
   let id_admin = adminSelect.value;
 
   let payload = {
+    titulo,
     descricao,
     dataInicio,
     dataFim,
