@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Cidade } from "./Cidade";
+import { Inscricao } from "./Inscricao";
 
 @Entity('usuario')
 export class Usuario extends BaseEntity {
@@ -29,4 +30,7 @@ export class Usuario extends BaseEntity {
 
   @ManyToOne(() => Cidade, (cidade) => cidade.usuarios)
   public cidade: Cidade;
+
+  @OneToMany(() => Inscricao, (inscricao) => inscricao.usuario)
+  public inscricao: Promise<Inscricao[]>;
 }
