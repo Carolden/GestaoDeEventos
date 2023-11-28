@@ -1,10 +1,9 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import * as yup from 'yup';
-import { Usuario } from '../models/Usuario'
-import { Not } from 'typeorm';
-import { AdminController } from '../controllers/AdminController';
-import { UsuarioController } from '../controllers/UsuarioController';
-
+import { NextFunction, Request, Response, Router } from "express";
+import * as yup from "yup";
+import { Usuario } from "../models/Usuario";
+import { Not } from "typeorm";
+import { AdminController } from "../controllers/AdminController";
+import { UsuarioController } from "../controllers/UsuarioController";
 
 // async function validarPayload (req: Request, res: Response, next: NextFunction): Promise<Response|void> {
 //     let schema = yup.object({
@@ -40,37 +39,40 @@ import { UsuarioController } from '../controllers/UsuarioController';
 //     return next();
 //   }
 
-// async function validarSeExiste (req: Request, res: Response, next: NextFunction): Promise<Response|void> {
-//     let id = Number(req.params.id);
-//     let cliente: Cliente|null = await Cliente.findOneBy({ id });
-//     if (! cliente) {
-//       return res.status(422).json({ error: 'Usuario não encontrado!' });
-//     }
+async function validarSeExiste(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> {
+  let id = Number(req.params.id);
+  let usuario: Usuario | null = await Usuario.findOneBy({ id });
+  if (!usuario) {
+    return res.status(422).json({ error: "Usuario não encontrado!" });
+  }
 
-//     res.locals.cliente = cliente;
+  res.locals.usuario = usuario;
 
-//     return next();
-//   }
+  return next();
+}
 
 let router: Router = Router();
 
 let usuarioController: UsuarioController = new UsuarioController();
 
-router.post('/usuario', usuarioController.create);
+router.post("/usuario", usuarioController.create);
 
-router.get('/usuario/:id', usuarioController.find);
+router.get("/usuario/:id", validarSeExiste, usuarioController.find);
 
-router.get('/usuario', usuarioController.list);
+router.get("/usuario", usuarioController.list);
 
-router.put('/usuario/:id', usuarioController.update);
+router.put("/usuario/:id", usuarioController.update);
 
-router.delete('/usuario/:id', usuarioController.delete);
+router.delete("/usuario/:id", usuarioController.delete);
 
 router.get("/usuariopdf", usuarioController.downloadPdf);
 
 router.get("/usuariocsv", usuarioController.exportCsv);
 
-router.post('/usuario/login', usuarioController.login);
-
+router.post("/usuario/login", usuarioController.login);
 
 export default router;
