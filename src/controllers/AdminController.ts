@@ -37,26 +37,51 @@ export class AdminController {
       }
 
       async update (req: Request, res: Response): Promise<Response> {
-        let body = req.body;
-        let admin: Admin = res.locals.admin;
-
-
-        admin.nome = body.nome;
-        admin.email = body.email;
-        admin.senha = body.senha;
-        admin.role = body.role;
-        await admin.save();
-
-
-        return res.status(200).json(admin);
+        try {
+          console.log('Administrador encontrado:', res.locals.admin);
+      
+          const body = req.body;
+          const adminId = Number(req.params.id);
+      
+          // Substitua 'Admin' pelo nome real do seu modelo de administrador
+          const admin = await Admin.findOneBy({ id: adminId });
+      
+          if (!admin) {
+            return res.status(404).json({ error: 'Administrador não encontrado' });
+          }
+      
+          admin.nome = body.nome;
+          admin.email = body.email;
+          admin.senha = body.senha;
+          admin.role = body.role;
+      
+          await admin.save();
+      
+          return res.status(200).json(admin);
+        } catch (error) {
+          console.error('Erro ao atualizar administrador:', error);
+          return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
       }
 
       async delete (req: Request, res: Response): Promise<Response> {
-        let admin: Admin = res.locals.admin;
-
-        admin.remove();
-
-        return res.status(200).json();
+        try {
+          const adminId = Number(req.params.id);
+      
+          // Substitua 'Admin' pelo nome real do seu modelo de administrador
+          const admin = await Admin.findOneBy({ id: adminId });
+      
+          if (!admin) {
+            return res.status(404).json({ message: 'Administrador não encontrado.' });
+          }
+      
+          await admin.remove();
+      
+          return res.status(204).send();
+        } catch (error) {
+          console.error('Erro ao excluir administrador', error);
+          return res.status(500).json({ message: 'Erro ao excluir administrador' });
+        }
       }
 
       async downloadPdf(req: Request, res: Response) {

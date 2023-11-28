@@ -1,29 +1,22 @@
 let corpoTabela = document.getElementById("corpo-tabela");
 
-async function buscarAdmins() {
-  let resposta = await fetch("http://localhost:3000/admin");
-  let admins = await resposta.json();
+async function buscarCidades() {
+  let resposta = await fetch("http://localhost:3000/cidade");
+  let cidades = await resposta.json();
 
-  for (let admin of admins) {
+  for (let cidade of cidades) {
     let tr = document.createElement("tr");
     let tdNome = document.createElement("td");
-    let tdEmail = document.createElement("td");
-    // let tdSenha = document.createElement("td");
     let tdAcoes = document.createElement("td");
 
-    tdNome.innerText = admin.nome;
-    tdEmail.innerText = admin.email;
-    // tdSenha.innerText = admin.senha;
-
+    tdNome.innerText = cidade.nome;
     tdAcoes.innerHTML = `
-      <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${admin.id}">Editar</a>
-      <button class="btn btn-outline-danger btn-sm" onclick="excluir(${admin.id})">Excluir</button>
+      <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${cidade.id}">Editar</a>
+      <button class="btn btn-outline-danger btn-sm" onclick="excluir(${cidade.id})">Excluir</button>
     `;
 
     tdAcoes.classList = "text-center";
     tr.appendChild(tdNome);
-    tr.appendChild(tdEmail);
-    // tr.appendChild(tdSenha);
     tr.appendChild(tdAcoes);
 
     corpoTabela.appendChild(tr);
@@ -32,10 +25,10 @@ async function buscarAdmins() {
 
 async function excluir(id) {
   let confirma = confirm(
-    "Deseja excluir esse cliente? Esta ação não pode ser revertida."
+    "Deseja excluir essa Cidade? Esta ação não pode ser revertida."
   );
   if (confirma) {
-    await fetch("http://localhost:3000/admin/" + id, {
+    await fetch("http://localhost:3000/cidade/" + id, {
       method: "DELETE",
     });
 
@@ -43,7 +36,7 @@ async function excluir(id) {
   }
 }
 
-buscarAdmins();
+buscarCidades();
 
 function download(content, mimeType, filename) {
   const a = document.createElement("a");
@@ -55,23 +48,23 @@ function download(content, mimeType, filename) {
 }
 
 async function exportPdf() {
-  let pdf = await fetch("http://localhost:3000/adminpdf", {
+  let pdf = await fetch("http://localhost:3000/cidadepdf", {
     headers: {
       "Content-type": "application/json",
       Acccept: "appplication/json",
       // Authorization: authorization,
     },
   });
-  download(await pdf.blob(), "application/x-pdf", "ListaAdmins.pdf");
+  download(await pdf.blob(), "application/x-pdf", "ListaCidade.pdf");
 }
 
 async function exportCsv() {
-  let csv = await fetch("http://localhost:3000/admincsv", {
+  let csv = await fetch("http://localhost:3000/cidadecsv", {
     headers: {
       "Content-type": "application/json",
       Acccept: "appplication/json",
       // Authorization: authorization,
     },
   });
-  download(await csv.text(), "text/csv", "ListaAdmins.csv");
+  download(await csv.text(), "text/csv", "ListaCidade.csv");
 }
