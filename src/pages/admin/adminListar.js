@@ -8,12 +8,12 @@ async function buscarAdmins() {
     let tr = document.createElement("tr");
     let tdNome = document.createElement("td");
     let tdEmail = document.createElement("td");
-    let tdSenha = document.createElement("td");
+    // let tdSenha = document.createElement("td");
     let tdAcoes = document.createElement("td");
 
     tdNome.innerText = admin.nome;
     tdEmail.innerText = admin.email;
-    tdSenha.innerText = admin.senha;
+    // tdSenha.innerText = admin.senha;
 
     tdAcoes.innerHTML = `
       <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${admin.id}">Editar</a>
@@ -23,7 +23,7 @@ async function buscarAdmins() {
     tdAcoes.classList = "text-center";
     tr.appendChild(tdNome);
     tr.appendChild(tdEmail);
-    tr.appendChild(tdSenha);
+    // tr.appendChild(tdSenha);
     tr.appendChild(tdAcoes);
 
     corpoTabela.appendChild(tr);
