@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
-import { ILike } from 'typeorm';
+import { ILike, getRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { Admin } from '../models/Admin';
 import * as puppeteer from "puppeteer";
 import { Usuario } from '../models/Usuario';
 import { Cidade } from '../models/Cidade';
+import { log } from 'console';
 
 export class UsuarioController {
     async list (req: Request, res: Response): Promise<Response> {
@@ -26,7 +27,7 @@ export class UsuarioController {
       async create(req: Request, res: Response): Promise<Response> {
         try {
           const body = req.body;
-          const cidadeNome = body.cidadeId; // Assumindo que você está enviando o nome da cidade como cidadeId
+          const cidadeNome = body.cidadeId; 
 
           if (typeof cidadeNome !== 'string') {
             return res.status(400).json({ error: 'Nome da cidade inválido' });
@@ -48,7 +49,7 @@ export class UsuarioController {
             endereco: body.endereco,
           });
     
-          usuario.cidade = cidade; // Atribuir a instância da cidade ao usuário
+          usuario.cidade = cidade; 
     
           await usuario.save();
     
@@ -59,19 +60,46 @@ export class UsuarioController {
         }
       }
 
-      async update (req: Request, res: Response): Promise<Response> {
-        let body = req.body;
-        let usuario: Usuario = res.locals.usuario;
+      async update(req: Request, res: Response): Promise<Response> {
+        try {          
+          console.log('Usuário encontrado:', res.locals.usuario);
 
+          const body = req.body;
+          const userId = Number(req.params.id);
+          const cidadeNome = body.cidadeId; 
 
-        usuario.nome = body.nome;
-        usuario.email = body.email;
-        usuario.senha = body.senha;
-        usuario.role = body.role;
-        await usuario.save();
+          const usuario = await Usuario.findOneBy({id: userId});
 
-
-        return res.status(200).json(usuario);
+          if (typeof cidadeNome !== 'string') {
+            return res.status(400).json({ error: 'Nome da cidade inválido' });
+          }
+          
+          const cidade = await Cidade.findOne({ where: { nome: cidadeNome } });       
+             
+          if (!cidade) {
+            return res.status(404).json({ error: 'Cidade não encontrada' });
+          }
+          
+          if (!usuario) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+          }
+      
+          usuario.nome = body.nome;
+          usuario.email = body.email;
+          usuario.senha = body.senha;
+          usuario.role = body.role;
+          usuario.cpf = body.cpf;
+          usuario.telefone = body.telefone;
+          usuario.endereco = body.endereco;
+          usuario.cidade = cidade; 
+      
+          await usuario.save();
+      
+          return res.status(200).json(usuario);
+        } catch (error) {
+          console.error('Erro ao atualizar usuário:', error);
+          return res.status(500).json({ error: 'Erro interno do servidor' });
+        }
       }
 
       async delete(req: Request, res: Response): Promise<Response> {
