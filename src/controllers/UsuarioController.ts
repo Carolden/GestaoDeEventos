@@ -210,12 +210,25 @@ export class UsuarioController {
       senha: body.senha,
     });
 
+    let token: string = Buffer.from(`${body.email}:${body.senha}`).toString(
+      "base64"
+    );
+
     if (adminLogin) {
-      return res.status(200).json();
+      return res.status(200).json({
+        token,
+        type: "basic",
+        role: "admin",
+      });
     }
 
     if (usuarioLogin) {
-      return res.status(200).json();
+      return res.status(200).json({
+        token,
+        type: "basic",
+        role: "user",
+        idUsuario: usuarioLogin.id,
+      });
     }
 
     return res.status(422).json({

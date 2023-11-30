@@ -1,5 +1,9 @@
 let corpoTabela = document.getElementById("corpo-tabela");
 
+let authorization = localStorage.getItem("Authorization");
+let role = localStorage.getItem("Role");
+let idUsuario = localStorage.getItem("IdUser");
+
 async function buscarEventos() {
   let resposta = await fetch("http://localhost:3000/evento");
   let eventos = await resposta.json();
@@ -25,7 +29,11 @@ async function buscarEventos() {
     tdLocal.innerText = evento.local;
     tdCidade.innerText = evento.cidade.nome;
 
-    tdAcoes.innerHTML = `
+    // if (idUsuario) {
+    //   tdAcoes.innerHTML = `<button class="btn btn-outline-info btn-sm" onclick="inscerver(${evento.id})">Inscreva-se</button>`;
+    // }
+
+    tdAcoes.innerHTML += `
       <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${evento.id}">Editar</a>
       <button class="btn btn-outline-danger btn-sm" onclick="excluir(${evento.id})">Excluir</button>
     `;
@@ -46,15 +54,19 @@ async function buscarEventos() {
 }
 
 async function excluir(id) {
-  let confirma = confirm(
-    "Deseja excluir esse cliente? Esta ação não pode ser revertida."
-  );
-  if (confirma) {
-    await fetch("http://localhost:3000/evento/" + id, {
-      method: "DELETE",
-    });
+  if (role != "admin") {
+    alert("Você não tem permissão para isso!");
+  } else {
+    let confirma = confirm(
+      "Deseja excluir esse cliente? Esta ação não pode ser revertida."
+    );
+    if (confirma) {
+      await fetch("http://localhost:3000/evento/" + id, {
+        method: "DELETE",
+      });
 
-    window.location.reload();
+      window.location.reload();
+    }
   }
 }
 

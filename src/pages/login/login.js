@@ -1,4 +1,4 @@
-document.getElementById("form").addEventListener('submit', async (event) => {
+document.getElementById("form").addEventListener("submit", async (event) => {
   event.stopPropagation();
   event.preventDefault();
 
@@ -7,24 +7,34 @@ document.getElementById("form").addEventListener('submit', async (event) => {
 
   let payload = {
     email,
-    senha
-  }
+    senha,
+  };
 
-  let url = 'http://localhost:3000/usuario/login';
-  let method = 'POST';
+  let url = "http://localhost:3000/usuario/login";
+  let method = "POST";
 
   let resposta = await fetch(url, {
     method: method,
     headers: {
-      'Content-type': 'application/json',
-      'Accept': 'application/json'
+      "Content-type": "application/json",
+      Accept: "application/json",
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 
   if (resposta.ok) {
-    window.location.href = './../home/index.html'
+    let dados = await resposta.json();
+    let authorization = `${dados.type} ${dados.token}`;
+    let role = `${dados.role}`;
+    let idUser = `${dados.idUsuario}`;
+    localStorage.setItem("Authorization", authorization);
+    localStorage.setItem("Role", role);
+    if (dados.idUsuario != undefined) {
+      localStorage.setItem("IdUser", idUser);
+    }
+
+    window.location.href = "./../home/index.html";
   } else {
-    alert('Usuário ou senha incorretos!');
+    alert("Usuário ou senha incorretos!");
   }
 });

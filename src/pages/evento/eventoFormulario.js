@@ -1,3 +1,11 @@
+let authorization = localStorage.getItem("Authorization");
+let role = localStorage.getItem("Role");
+
+if (role != "admin") {
+  alert("Você não tem permissão para isso!");
+  window.location.href = "index.html";
+}
+
 let cidadeSelect = document.getElementById("cidade");
 let adminSelect = document.getElementById("admin");
 
