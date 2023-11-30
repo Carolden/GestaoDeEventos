@@ -15,7 +15,7 @@ async function listaUsuarios() {
 
     let nomesUsuarios = usuariosJson.map((usuario) => usuario.nome);
 
-    popularDropdown(nomesUsuarios);
+    popularDropdownUsuario(nomesUsuarios);
   } else {
     console.error("Erro ao obter a lista de usuarios");
   }
@@ -26,10 +26,10 @@ async function listaUsuarios() {
   }
 }
 
-function popularDropdown(usuario) {
+function popularDropdownUsuario(usuario) {
   inputUsuario.innerHTML = "";
 
-  inputUsuario.innerHTML = "<option selected>Selecione a cidade</option>";
+  inputUsuario.innerHTML = "<option selected>Selecione o usuario</option>";
 
   usuario.forEach((usuario) => {
     let option = document.createElement("option");
@@ -48,21 +48,21 @@ async function listaEventos() {
 
     let nomesEventos = eventosJson.map((evento) => evento.titulo);
 
-    popularDropdown(nomesEventos);
+    popularDropdownEvento(nomesEventos);
   } else {
     console.error("Erro ao obter a lista de eventos");
   }
   if (id) {
     let resposta = await fetch("http://localhost:3000/inscricao/" + id);
     let inscricao = await resposta.json();
-    inputUsuario.value = inscricao.usuario.nome;
+    inputEvento.value = inscricao.evento.titulo;
   }
 }
 
-function popularDropdown(evento) {
+function popularDropdownEvento(evento) {
   inputEvento.innerHTML = "";
 
-  inputEvento.innerHTML = "<option selected>Selecione a cidade</option>";
+  inputEvento.innerHTML = "<option selected>Selecione o evento</option>";
 
   evento.forEach((evento) => {
     let option = document.createElement("option");
