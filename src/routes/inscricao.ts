@@ -6,19 +6,19 @@ let router: Router = Router();
 
 let inscricaoController: InscricaoController = new InscricaoController();
 
-router.post('/inscrição', inscricaoController.create);
+router.post('/inscricao', inscricaoController.create);
 
-router.get('/inscrição', inscricaoController.list);
+router.get('/inscricao', inscricaoController.list);
 
-router.put('/inscrição/:id', inscricaoController.update);
+router.put('/inscricao/:id', inscricaoController.update);
 
-router.delete('/inscrição/:id', inscricaoController.delete);
+router.delete('/inscricao/:id', inscricaoController.delete);
 
-// router.get("/inscriçãopdf", inscricaoController.downloadPdf);
+// router.get("/inscricaopdf", inscricaoController.downloadPdf);
 
-// router.get("/inscriçãocsv", inscricaoController.exportCsv);
+// router.get("/inscricaocsv", inscricaoController.exportCsv);
 
-// router.post('/inscrição/login', inscricaoController.login);
+// router.post('/inscricao/login', inscricaoController.login);
 
 
 export default router;
