@@ -40,8 +40,41 @@ function popularDropdown(usuario) {
   });
 }
 
+async function listaEventos() {
+  let resposta = await fetch("http://localhost:3000/evento");
+
+  if (resposta.ok) {
+    let eventosJson = await resposta.json();
+
+    let nomesEventos = eventosJson.map((evento) => evento.titulo);
+
+    popularDropdown(nomesEventos);
+  } else {
+    console.error("Erro ao obter a lista de eventos");
+  }
+  if (id) {
+    let resposta = await fetch("http://localhost:3000/inscricao/" + id);
+    let inscricao = await resposta.json();
+    inputUsuario.value = inscricao.usuario.nome;
+  }
+}
+
+function popularDropdown(evento) {
+  inputEvento.innerHTML = "";
+
+  inputEvento.innerHTML = "<option selected>Selecione a cidade</option>";
+
+  evento.forEach((evento) => {
+    let option = document.createElement("option");
+    option.value = evento;
+    option.textContent = evento;
+    inputEvento.appendChild(option);
+    // console.log(option);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  listaUsuarios();
+  listaEventos();
 });
 
 async function buscarDados() {
