@@ -105,16 +105,18 @@
 
                 <form id="formulario">
                   <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Usuário</span>
-                    <input type="text" class="form-control usuario" aria-label="Sizing example input" id="usuario" aria-describedby="inputGroup-sizing-default">
+                    <label class="input-group-text" for="inputGroupSelect">Usuario</label>
+                    <select class="form-select usuario" id="usuario" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </select>
                   </div>
                   <div class="input-group mb-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Evento</span>
-                    <input type="text" class="form-control evento" aria-label="Sizing example input" id="evento" aria-describedby="inputGroup-sizing-default">
+                    <label class="input-group-text" for="inputGroupSelect">Evento</label>
+                    <select class="form-select evento" id="evento" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    </select>
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-default">Status</span>
-                    <input type="date" class="form-control status" aria-label="Sizing example input" id="status" aria-describedby="inputGroup-sizing-default">
+                    <input type="text" class="form-control status" aria-label="Sizing example input" id="status" aria-describedby="inputGroup-sizing-default">
                   </div>
                   <br>
                   <button type="submit" class="btn btn-primary" id="button">Salvar</button>

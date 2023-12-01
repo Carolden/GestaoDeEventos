@@ -3,27 +3,30 @@ const id = urlParams.get("id");
 
 let inputUsuario = document.getElementById("usuario");
 let inputEvento = document.getElementById("evento");
-let inputStatus = document.getElementById("status");
+let   inputStatus = document.getElementById("status");
 let form = document.getElementById("formulario");
 
 
 async function listaUsuarios() {
-  let resposta = await fetch("http://localhost:3000/usuario");
+  let response = await fetch("http://localhost:3000/usuario", {
+    headers: {
+      "Content-type": "application/json",
+      Acccept: "appplication/json",
+      // Authorization: authorization,
+    },
+  });
+  if (response.ok) {
 
-  if (resposta.ok) {
-    let usuariosJson = await resposta.json();
-
-    let nomesUsuarios = usuariosJson.map((usuario) => usuario.nome);
-
-    popularDropdownUsuario(nomesUsuarios);
-  } else {
-    console.error("Erro ao obter a lista de usuarios");
-  }
-  if (id) {
-    let resposta = await fetch("http://localhost:3000/inscricao/" + id);
-    let inscricao = await resposta.json();
-    inputUsuario.value = inscricao.usuario.nome;
-  }
+  let usuarios = await response.json();
+  popularDropdownUsuario (usuarios);
+} else {
+  console.error("Erro ao obter a lista de eventos");
+}
+if (id) {
+  let resposta = await fetch("http://localhost:3000/inscricao/" + id);
+  let inscricao = await resposta.json();
+  inputUsuario.value = inscricao.usuario.id;
+}
 }
 
 function popularDropdownUsuario(usuario) {
@@ -33,29 +36,33 @@ function popularDropdownUsuario(usuario) {
 
   usuario.forEach((usuario) => {
     let option = document.createElement("option");
-    option.value = usuario;
-    option.textContent = usuario;
+    option.value = usuario.id;
+    option.textContent = usuario.nome;
     inputUsuario.appendChild(option);
     console.log(option);
   });
 }
 
 async function listaEventos() {
-  let resposta = await fetch("http://localhost:3000/evento");
+  let response = await fetch("http://localhost:3000/evento", {
+    headers: {
+      "Content-type": "application/json",
+      Acccept: "appplication/json",
+      // Authorization: authorization,
+    },
+  });
+  if (response.ok) {
 
-  if (resposta.ok) {
-    let eventosJson = await resposta.json();
-
-    let nomesEventos = eventosJson.map((evento) => evento.titulo);
-
-    popularDropdownEvento(nomesEventos);
-  } else {
-    console.error("Erro ao obter a lista de eventos");
-  }
+  let eventos = await response.json();
+  
+  popularDropdownEvento (eventos);
+} else {
+  console.error("Erro ao obter a lista de eventos");
+}
   if (id) {
     let resposta = await fetch("http://localhost:3000/inscricao/" + id);
     let inscricao = await resposta.json();
-    inputEvento.value = inscricao.evento.titulo;
+    inputEvento.value = inscricao.evento.id;
   }
 }
 
@@ -66,27 +73,28 @@ function popularDropdownEvento(evento) {
 
   evento.forEach((evento) => {
     let option = document.createElement("option");
-    option.value = evento;
-    option.textContent = evento;
+    option.value = evento.id;
+    option.textContent = evento.titulo;
     inputEvento.appendChild(option);
-    // console.log(option);
+    console.log(option);
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   listaEventos();
+  listaUsuarios();
 });
 
 async function buscarDados() {
   let resposta = await fetch("http://localhost:3000/inscricao/" + id);
   if (resposta.ok) {
     let inscricao = await resposta.json();
-    inputUsuario.value = inscricao.id_usuario;
-    inputEvento.value = inscricao.id_evento;
-    inputStatus.value = inscricao.status;
-  } else if (resposta.status === 422) {
-    let e = await resposta.json();
-    alert(e.error);
+    // inputUsuario.value = inscricao.usuario.id;
+    // inputEvento.value = inscricao.evento.id;
+  //   inputStatus.value = inscricao.status;
+  // } else if (resposta.status === 422) {
+  //   let e = await resposta.json();
+  //   alert(e.error);
   } else {
     alert("Ops! Algo deu errado!");
   }
@@ -104,7 +112,7 @@ form.addEventListener("submit", async (event) => {
   let payload = {
     id_usuario: inputUsuario.value,
     id_evento: inputEvento.value,
-    id_status: inputStatus.value,
+    status: inputStatus.value,
   };
 
   let url = "http://localhost:3000/inscricao";

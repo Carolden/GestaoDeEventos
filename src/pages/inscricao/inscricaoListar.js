@@ -5,28 +5,31 @@ let role = localStorage.getItem("Role");
 let idUsuario = localStorage.getItem("IdUser");
 
 async function buscarInscricoes() {
-  let resposta = await fetch("http://localhost:3000/inscrição");
+  let resposta = await fetch("http://localhost:3000/inscricao");
   let inscricoes = await resposta.json();
 
   for (let inscricao of inscricoes) {
+    console.log(inscricao);
     let tr = document.createElement("tr");
     let tdUsuario = document.createElement("td");
     let tdEvento = document.createElement("td");
     let tdStatus = document.createElement("td");
+    let tdAcoes = document.createElement('td');
 
-    tdUsuario.innerText = inscricao.id_usuario;
-    tdEvento.innerText = inscricao.id_evento;
+    tdUsuario.innerText = inscricao.usuario.nome;
+    tdEvento.innerText = inscricao.evento.titulo;
     tdStatus.innerText = inscricao.status;
 
     tdAcoes.innerHTML += `
-      <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${evento.id}">Editar</a>
-      <button class="btn btn-outline-danger btn-sm" onclick="excluir(${evento.id})">Excluir</button>
+      <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${inscricao.id}">Editar</a>
+      <button class="btn btn-outline-danger btn-sm" onclick="excluir(${inscricao.id})">Excluir</button>
     `;
 
     tdAcoes.classList = "text-center";
     tr.appendChild(tdUsuario);
     tr.appendChild(tdEvento);
     tr.appendChild(tdStatus);
+    tr.appendChild(tdAcoes);
 
     corpoTabela.appendChild(tr);
   }
