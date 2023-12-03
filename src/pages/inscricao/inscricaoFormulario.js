@@ -151,18 +151,17 @@ form.addEventListener("submit", async (event) => {
     body: JSON.stringify(payload),
   });
 
-  let enviarEmail = await fetch("http://localhost:3000/usuarioemail", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(payloadEmail),
-  });
-
   if (resposta.ok) {
+    let enviarEmail = await fetch("http://localhost:3000/usuarioemail", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payloadEmail),
+    });
     window.location.href = "index.html";
   } else {
-    alert("Ops! Algo deu errado!");
+    alert("Você já está cadastrado nesse evento!");
   }
 });

@@ -51,15 +51,19 @@ export class InscricaoController {
   }
 
   async create(req: Request, res: Response): Promise<Response> {
-    let body = req.body;
+    try {
+      let body = req.body;
 
-    let inscricao: Inscricao = await Inscricao.create({
-      id_evento: body.id_evento,
-      id_usuario: body.id_usuario,
-      status: body.status,
-    }).save();
+      let inscricao: Inscricao = await Inscricao.create({
+        id_evento: body.id_evento,
+        id_usuario: body.id_usuario,
+        status: body.status,
+      }).save();
 
-    return res.status(200).json(inscricao);
+      return res.status(200).json(inscricao);
+    } catch (error: any) {
+      return res.status(500).json({ error: "Erro interno do servidor." });
+    }
   }
 
   async update(req: Request, res: Response): Promise<Response> {
