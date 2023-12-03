@@ -3,9 +3,20 @@ const id = urlParams.get("id");
 
 let inputUsuario = document.getElementById("usuario");
 let inputEvento = document.getElementById("evento");
-let   inputStatus = document.getElementById("status");
+let inputStatus = document.getElementById("status");
 let form = document.getElementById("formulario");
+let eventoSelecionado;
+let authorization = localStorage.getItem("Authorization");
+let role = localStorage.getItem("Role");
+let idUsuario = localStorage.getItem("IdUser");
+let nomeUsuario = localStorage.getItem("Nome");
+let emailUsuario = localStorage.getItem("Email");
 
+if (role != "user") {
+  alert("Somente usuários podem se inscrever em eventos!");
+  window.location.href = "index.html";
+}
+console.log(role);
 
 async function listaUsuarios() {
   let response = await fetch("http://localhost:3000/usuario", {
@@ -16,17 +27,16 @@ async function listaUsuarios() {
     },
   });
   if (response.ok) {
-
-  let usuarios = await response.json();
-  popularDropdownUsuario (usuarios);
-} else {
-  console.error("Erro ao obter a lista de eventos");
-}
-if (id) {
-  let resposta = await fetch("http://localhost:3000/inscricao/" + id);
-  let inscricao = await resposta.json();
-  inputUsuario.value = inscricao.usuario.id;
-}
+    let usuarios = await response.json();
+    popularDropdownUsuario(usuarios);
+  } else {
+    console.error("Erro ao obter a lista de eventos");
+  }
+  if (id) {
+    let resposta = await fetch("http://localhost:3000/inscricao/" + id);
+    let inscricao = await resposta.json();
+    inputUsuario.value = inscricao.usuario.id;
+  }
 }
 
 function popularDropdownUsuario(usuario) {
@@ -52,13 +62,12 @@ async function listaEventos() {
     },
   });
   if (response.ok) {
+    let eventos = await response.json();
 
-  let eventos = await response.json();
-  
-  popularDropdownEvento (eventos);
-} else {
-  console.error("Erro ao obter a lista de eventos");
-}
+    popularDropdownEvento(eventos);
+  } else {
+    console.error("Erro ao obter a lista de eventos");
+  }
   if (id) {
     let resposta = await fetch("http://localhost:3000/inscricao/" + id);
     let inscricao = await resposta.json();
@@ -80,6 +89,11 @@ function popularDropdownEvento(evento) {
   });
 }
 
+inputEvento.addEventListener("change", () => {
+  const selectedIndex = inputEvento.selectedIndex;
+  eventoSelecionado = inputEvento.options[selectedIndex].textContent;
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   listaEventos();
   listaUsuarios();
@@ -91,10 +105,10 @@ async function buscarDados() {
     let inscricao = await resposta.json();
     // inputUsuario.value = inscricao.usuario.id;
     // inputEvento.value = inscricao.evento.id;
-  //   inputStatus.value = inscricao.status;
-  // } else if (resposta.status === 422) {
-  //   let e = await resposta.json();
-  //   alert(e.error);
+    //   inputStatus.value = inscricao.status;
+    // } else if (resposta.status === 422) {
+    //   let e = await resposta.json();
+    //   alert(e.error);
   } else {
     alert("Ops! Algo deu errado!");
   }
@@ -112,7 +126,13 @@ form.addEventListener("submit", async (event) => {
   let payload = {
     id_usuario: inputUsuario.value,
     id_evento: inputEvento.value,
-    status: inputStatus.value,
+    status: "I",
+  };
+
+  let payloadEmail = {
+    email: emailUsuario,
+    nome: nomeUsuario,
+    evento: eventoSelecionado,
   };
 
   let url = "http://localhost:3000/inscricao";
@@ -129,6 +149,15 @@ form.addEventListener("submit", async (event) => {
       Accept: "application/json",
     },
     body: JSON.stringify(payload),
+  });
+
+  let enviarEmail = await fetch("http://localhost:3000/usuarioemail", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payloadEmail),
   });
 
   if (resposta.ok) {

@@ -228,6 +228,8 @@ export class UsuarioController {
         type: "basic",
         role: "user",
         idUsuario: usuarioLogin.id,
+        email: usuarioLogin.email,
+        nome: usuarioLogin.nome,
       });
     }
 

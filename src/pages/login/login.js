@@ -27,10 +27,14 @@ document.getElementById("form").addEventListener("submit", async (event) => {
     let authorization = `${dados.type} ${dados.token}`;
     let role = `${dados.role}`;
     let idUser = `${dados.idUsuario}`;
+    let email = `${dados.email}`;
+    let nome = `${dados.nome}`;
     localStorage.setItem("Authorization", authorization);
     localStorage.setItem("Role", role);
     if (dados.idUsuario != undefined) {
       localStorage.setItem("IdUser", idUser);
+      localStorage.setItem("Email", email);
+      localStorage.setItem("Nome", nome);
     }
 
     window.location.href = "./../home/index.html";
