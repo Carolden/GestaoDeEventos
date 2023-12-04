@@ -26,7 +26,6 @@ export class Inscricao extends BaseEntity {
   @Column()
   public status: string;
 
-  @Unique(["id_evento", "id_usuario"])
   @ManyToOne(() => Evento, (evento) => evento.inscricao, { eager: true })
   @JoinColumn({ name: "id_evento" })
   public evento: Evento;

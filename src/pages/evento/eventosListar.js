@@ -9,6 +9,7 @@ async function buscarEventos() {
   let eventos = await resposta.json();
 
   for (let evento of eventos) {
+    console.log(evento);
     let tr = document.createElement("tr");
     let tdTitulo = document.createElement("td");
     let tdDescricao = document.createElement("td");
@@ -30,7 +31,8 @@ async function buscarEventos() {
     tdCidade.innerText = evento.cidade.nome;
 
     if (role == "admin") {
-      tdAcoes.innerHTML = `<button class="btn btn-outline-info btn-sm" onclick="listarInscritos(${evento.id})">Inscritos</button>`;
+      tdAcoes.innerHTML = `<a class="btn btn-outline-info btn-sm" href="inscritos.html?id=${evento.id}">Inscritos</a>`;
+      console.log(evento.id);
     }
 
     tdAcoes.innerHTML += `
