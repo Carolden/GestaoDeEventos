@@ -22,7 +22,7 @@ async function buscarInscricoes() {
       tdStatus.innerText = inscricao.status;
 
       tdAcoes.innerHTML += `
-        <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${inscricao.id}">Fazer Check-in</a>
+        <button class="btn btn-outline-primary btn-sm" onclick="checkin(${inscricao.id}, ${inscricao.id_evento})">Fazer Check-in</button>
         <button class="btn btn-outline-danger btn-sm" onclick="excluir(${inscricao.id})">Cancelar Inscrição</button>
       `;
 
@@ -37,14 +37,41 @@ async function buscarInscricoes() {
   }
 }
 
+async function checkin(id, idEvento) {
+  let payload = {
+    id: id,
+    id_evento: idEvento,
+    status: "C",
+  };
+  let confirma = confirm("Deseja fazer checkin?");
+  if (confirma) {
+    await fetch("http://localhost:3000/inscricao/" + id, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+  window.location.reload();
+}
+
 async function excluir(id) {
   let confirma = confirm(
     "Deseja cancelar sua inscrição? Esta ação não pode ser revertida."
   );
   if (confirma) {
-    await fetch("http://localhost:3000/inscricao/" + id, {
-      method: "DELETE",
-    });
+    let response = await fetch("http://localhost:3000/inscricao/" + id);
+    let evento = await response.json();
+
+    if (evento.status == "C") {
+      alert("Você já fez check-in nesse evento");
+    } else {
+      await fetch("http://localhost:3000/inscricao/" + id, {
+        method: "DELETE",
+      });
+    }
 
     window.location.reload();
   }

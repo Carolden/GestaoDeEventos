@@ -50,6 +50,12 @@ export class InscricaoController {
     return res.status(200).json(event);
   }
 
+  async find(req: Request, res: Response): Promise<Response> {
+    let Inscricao: Inscricao = res.locals.inscricao;
+
+    return res.status(200).json(Inscricao);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     try {
       let body = req.body;
@@ -70,9 +76,10 @@ export class InscricaoController {
     let body = req.body;
     let inscricao: Inscricao = res.locals.inscricao;
 
-    (inscricao.id_evento = body.id_evento)(
-      (inscricao.id_usuario = body.id_usuario)
-    )((inscricao.status = body.status));
+    (inscricao.id = body.id),
+      (inscricao.id_evento = body.id_evento),
+      (inscricao.id_usuario = body.id_usuario),
+      (inscricao.status = body.status);
     await inscricao.save();
 
     return res.status(200).json(inscricao);

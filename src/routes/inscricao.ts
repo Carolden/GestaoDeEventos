@@ -27,7 +27,9 @@ router.post("/inscricao", inscricaoController.create);
 
 router.get("/inscricao", inscricaoController.list);
 
-router.put("/inscricao/:id", inscricaoController.update);
+router.get("/inscricao/:id", validarSeExiste, inscricaoController.find);
+
+router.put("/inscricao/:id", validarSeExiste, inscricaoController.update);
 
 router.delete("/inscricao/:id", validarSeExiste, inscricaoController.delete);
 

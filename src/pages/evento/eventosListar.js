@@ -29,9 +29,9 @@ async function buscarEventos() {
     tdLocal.innerText = evento.local;
     tdCidade.innerText = evento.cidade.nome;
 
-    // if (idUsuario) {
-    //   tdAcoes.innerHTML = `<button class="btn btn-outline-info btn-sm" onclick="inscerver(${evento.id})">Inscreva-se</button>`;
-    // }
+    if (role == "admin") {
+      tdAcoes.innerHTML = `<button class="btn btn-outline-info btn-sm" onclick="listarInscritos(${evento.id})">Inscritos</button>`;
+    }
 
     tdAcoes.innerHTML += `
       <a class="btn btn-outline-primary btn-sm" href="formulario.html?id=${evento.id}">Editar</a>
